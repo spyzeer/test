@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estruturas Invisíveis UGC → Constelação Familiar</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --card2:#1d212b; --ink:#e8eaf0; --muted:#9aa3b2;
+    --line:#2a2f3a; --accent:#c9a36a; --accent2:#7aa2ff; --good:#5fd08a; --warn:#ffb454;
+    --maxw:760px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 18px 80px}
+  header.hero{
+    background:linear-gradient(160deg,#1b1f2a,#12141b);
+    border-bottom:1px solid var(--line);
+    padding:38px 18px 30px; text-align:center;
+  }
+  header.hero .wrap{padding-bottom:0}
+  .kicker{color:var(--accent); letter-spacing:.18em; text-transform:uppercase; font-size:12px; font-weight:700}
+  h1{font-size:26px; line-height:1.25; margin:10px 0 8px; letter-spacing:-.01em}
+  .sub{color:var(--muted); font-size:15px; max-width:560px; margin:0 auto}
+  .chips{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:16px}
+  .chip{background:var(--card2); border:1px solid var(--line); color:var(--ink);
+    padding:6px 12px; border-radius:999px; font-size:12.5px; font-weight:600}
+
+  nav.toc{margin:26px 0 6px}
+  nav.toc h2{font-size:13px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin:0 0 12px}
+  .toc-grid{display:grid; gap:10px}
+  .toc-item{display:flex; gap:14px; align-items:center; text-decoration:none; color:inherit;
+    background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px;
+    transition:border-color .15s, transform .05s}
+  .toc-item:active{transform:scale(.99)}
+  .toc-item .num{flex:0 0 38px; height:38px; display:grid; place-items:center; border-radius:10px;
+    background:linear-gradient(160deg,#2a2f3c,#20242f); color:var(--accent); font-weight:800; font-size:15px;
+    border:1px solid var(--line)}
+  .toc-item .t{font-weight:700; font-size:15px}
+  .toc-item .d{color:var(--muted); font-size:13px; margin-top:2px}
+
+  section.card{background:var(--card); border:1px solid var(--line); border-radius:18px;
+    padding:22px 20px; margin:18px 0; scroll-margin-top:14px}
+  section.card > h2{font-size:21px; margin:0 0 4px; letter-spacing:-.01em}
+  .eyebrow{color:var(--accent); font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase}
+  h3{font-size:17px; margin:22px 0 8px; color:#fff}
+  h4{font-size:15px; margin:18px 0 6px; color:var(--accent2)}
+  p{margin:10px 0}
+  .muted{color:var(--muted)}
+  strong{color:#fff}
+  ul,ol{padding-left:20px; margin:10px 0}
+  li{margin:6px 0}
+
+  .quote{border-left:3px solid var(--accent); background:var(--card2); border-radius:0 12px 12px 0;
+    padding:12px 16px; margin:14px 0; color:#eef0f6}
+  .quote.good{border-color:var(--good)}
+  .quote.bad{border-color:#ff6b6b}
+  .quote .lbl{display:block; font-size:11.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px}
+  .quote.good .lbl{color:var(--good)} .quote.bad .lbl{color:#ff8a8a}
+
+  .callout{background:linear-gradient(160deg,#241f17,#1c1913); border:1px solid #3a3324;
+    border-radius:14px; padding:14px 16px; margin:16px 0}
+  .callout .lbl{color:var(--warn); font-weight:800; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase}
+
+  .stack{display:grid; gap:10px; margin:14px 0}
+  .layer{background:var(--card2); border:1px solid var(--line); border-radius:12px; padding:12px 14px}
+  .layer b{color:#fff} .layer .time{color:var(--accent); font-weight:700; font-size:13px}
+  .layer .fn{color:var(--muted); font-size:13.5px}
+
+  pre{background:#0b0d12; border:1px solid var(--line); border-radius:12px; padding:14px;
+    overflow-x:auto; font:13px/1.55 "SF Mono",ui-monospace,Menlo,Consolas,monospace; color:#d6dae6}
+  code{background:#0b0d12; border:1px solid var(--line); border-radius:6px; padding:1px 6px; font-size:13.5px}
+  pre code{background:none; border:none; padding:0}
+
+  .struct{border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:12px 0; background:var(--card2)}
+  .struct .head{display:flex; align-items:baseline; gap:10px; margin-bottom:6px}
+  .struct .badge{flex:0 0 auto; background:var(--accent); color:#1a1407; font-weight:800; font-size:12px;
+    border-radius:8px; padding:3px 9px}
+  .struct .name{font-weight:800; font-size:15.5px}
+  .flow{font-size:13.5px; color:var(--muted); margin:6px 0}
+  .flow b{color:var(--accent2)}
+
+  .table-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:14px 0; border:1px solid var(--line); border-radius:12px}
+  table{border-collapse:collapse; width:100%; min-width:440px; font-size:13.5px}
+  th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{background:var(--card2); color:var(--accent); font-size:12px; text-transform:uppercase; letter-spacing:.05em}
+  tr:last-child td{border-bottom:none}
+  td.yes{color:var(--good)} td.no{color:#ff8a8a}
+
+  .checklist{list-style:none; padding:0}
+  .checklist li{background:var(--card2); border:1px solid var(--line); border-radius:10px; padding:10px 12px 10px 38px;
+    position:relative; margin:8px 0}
+  .checklist li:before{content:"✓"; position:absolute; left:12px; top:10px; color:var(--good); font-weight:800}
+
+  .toplink{display:block; text-align:center; color:var(--muted); text-decoration:none; font-size:13px;
+    margin-top:14px; padding-top:14px; border-top:1px dashed var(--line)}
+  .toplink:active{color:var(--accent)}
+
+  footer{color:var(--muted); text-align:center; font-size:12.5px; margin-top:30px; padding-top:20px; border-top:1px solid var(--line)}
+  .pill{display:inline-block; background:var(--card2); border:1px solid var(--line); border-radius:999px;
+    padding:3px 10px; font-size:12px; color:var(--muted); margin:2px}
+  a{color:var(--accent2)}
+
+  @media (max-width:480px){
+    h1{font-size:23px} section.card{padding:18px 15px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Meta Ads · Reels / Feed / Stories</div>
+    <h1>Estruturas Invisíveis de Criativos UGC</h1>
+    <p class="sub">O esqueleto escondido que faz um UGC vender — mapeado e adaptado para o nicho de <strong>Constelação Familiar</strong>.</p>
+    <div class="chips">
+      <span class="chip">5 camadas</span>
+      <span class="chip">12 estruturas</span>
+      <span class="chip">Templates prontos</span>
+      <span class="chip">Conformidade Meta</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="toc">
+    <h2>Conteúdo</h2>
+    <div class="toc-grid">
+      <a class="toc-item" href="#s0"><span class="num">★</span><div><div class="t">Princípio central</div><div class="d">Por que estrutura &gt; conteúdo</div></div></a>
+      <a class="toc-item" href="#s1"><span class="num">01</span><div><div class="t">A estrutura invisível</div><div class="d">A anatomia em 5 camadas</div></div></a>
+      <a class="toc-item" href="#s2"><span class="num">02</span><div><div class="t">Biblioteca de estruturas</div><div class="d">12 estruturas adaptadas</div></div></a>
+      <a class="toc-item" href="#s3"><span class="num">03</span><div><div class="t">Adaptação ao nicho</div><div class="d">Gatilhos, vocabulário, conformidade</div></div></a>
+      <a class="toc-item" href="#s4"><span class="num">04</span><div><div class="t">Templates &amp; bancos</div><div class="d">Roteiros, ganchos e CTAs</div></div></a>
+      <a class="toc-item" href="#s5"><span class="num">05</span><div><div class="t">Método de mapeamento</div><div class="d">Engenharia reversa de criativos</div></div></a>
+    </div>
+  </nav>
+
+  <!-- PRINCÍPIO -->
+  <section class="card" id="s0">
+    <div class="eyebrow">Comece por aqui</div>
+    <h2>★ O princípio central</h2>
+    <p>UGC (<em>User Generated Content</em>) parece espontâneo, mas o que converte segue uma arquitetura escondida. A <strong>“estrutura invisível”</strong> é esse esqueleto: a sequência psicológica que faz o espectador parar, se identificar, acreditar e agir — mesmo quando o vídeo parece um desabafo gravado na cozinha.</p>
+    <div class="quote">
+      <span class="lbl">A regra de ouro</span>
+      Você não copia o <strong>conteúdo</strong> do criativo vencedor. Você copia a <strong>estrutura</strong> (a ordem e a função de cada bloco) e troca o <strong>recheio</strong> pela sua mensagem. A estrutura se repete entre nichos; o recheio é o que é seu.
+    </div>
+    <h3>Caminho rápido</h3>
+    <ol>
+      <li>Internalize as <strong>5 camadas</strong> (seção 01) — é a base de tudo.</li>
+      <li>Escolha 2-3 <strong>estruturas</strong> (seção 02) que combinam com sua oferta.</li>
+      <li>Use os <strong>gatilhos e o vocabulário</strong> (seção 03) pra traduzir pro nicho.</li>
+      <li>Preencha os <strong>templates</strong> (seção 04) e grave.</li>
+      <li>Viu um criativo bom? Passe pelo <strong>método</strong> (seção 05) e some à sua biblioteca.</li>
+    </ol>
+  </section>
+
+  <!-- 01 -->
+  <section class="card" id="s1">
+    <div class="eyebrow">Fundamento</div>
+    <h2>01 · A estrutura invisível</h2>
+    <p>Todo criativo UGC que converte é montado sobre 5 camadas. O espectador só <em>sente</em> o vídeo — não percebe as camadas. Seu trabalho é montar cada uma com intenção. Os tempos são pra um Reels de ~45-50s; em vídeos curtos elas encolhem, mas <strong>a ordem nunca muda</strong>.</p>
+    <div class="stack">
+      <div class="layer"><span class="time">0–3s</span> · <b>1. Gancho</b> — <span class="fn">para o scroll · “preciso ver isso”</span></div>
+      <div class="layer"><span class="time">3–10s</span> · <b>2. Identificação</b> — <span class="fn">“isso sou eu”</span></div>
+      <div class="layer"><span class="time">10–25s</span> · <b>3. Virada / Mecanismo</b> — <span class="fn">“ah, é por isso” (o coração)</span></div>
+      <div class="layer"><span class="time">25–40s</span> · <b>4. Prova</b> — <span class="fn">“funciona mesmo”</span></div>
+      <div class="layer"><span class="time">40–50s</span> · <b>5. CTA</b> — <span class="fn">“o que eu faço agora”</span></div>
+    </div>
+
+    <h3>1 · O Gancho — para o dedo</h3>
+    <p>O gancho não vende, ele compra atenção. No Meta a métrica que importa é a <strong>retenção de 3 segundos</strong>. Ataca em 3 frentes: <strong>visual</strong> (algo que destoa do feed), <strong>verbal</strong> (1ª frase curta e tensa) e <strong>auditivo</strong> (tom de “preciso te contar”, não de comercial).</p>
+    <div class="quote bad"><span class="lbl">Fraco</span>“Você sabia que a constelação familiar pode mudar sua vida?”</div>
+    <div class="quote good"><span class="lbl">Forte</span>“Eu descobri que o motivo de eu nunca conseguir guardar dinheiro não era meu — era do meu avô.”</div>
+
+    <h3>2 · Identificação — “isso sou eu”</h3>
+    <p>Descreva o <strong>sintoma</strong>, não o diagnóstico. A pessoa não pensa “tenho um emaranhamento sistêmico” — ela pensa “todo relacionamento meu acaba do mesmo jeito”. Quanto mais específico, mais forte.</p>
+    <div class="quote">“Você já reparou que repete exatamente o mesmo erro da sua mãe, mesmo tendo jurado que nunca ia fazer igual?”</div>
+
+    <h3>3 · A Virada / Mecanismo — o “ahá”</h3>
+    <p>Aqui mora a verdadeira estrutura invisível: você <strong>reposiciona o problema</strong>. A pessoa achava que a culpa era dela; você revela outra causa e um mecanismo pra resolver.</p>
+    <pre><code>"O problema não é [o que você acha].
+ É [a causa real / o mecanismo].
+ E quando você [ação], [resultado] acontece."</code></pre>
+    <div class="quote">“A constelação mostrou que eu não sabotava meu casamento por escolha. Eu era leal, sem perceber, a uma separação que aconteceu duas gerações antes de eu nascer. No momento que vi isso, algo destravou.”</div>
+
+    <h3>4 · A Prova — torna acreditável</h3>
+    <p>Do mais forte ao mais fraco no UGC: <strong>transformação específica</strong> (com data/fato) › <strong>prova de processo</strong> (mostra como funciona) › <strong>prova social</strong> (depoimentos) › <strong>autoridade emprestada</strong>. No nicho, prova por <strong>sentimento</strong> (“me senti mais leve”) é mais segura e crível que promessa material.</p>
+
+    <h3>5 · O CTA — o próximo passo</h3>
+    <p><strong>Um só</strong> comando, baixo atrito. No Meta: voz + texto na tela + botão = 3 reforços.</p>
+    <div class="quote">“Se você sente que carrega um peso que nem é seu, comenta ‘MAPA’ aqui embaixo que eu te mando o primeiro passo.”</div>
+
+    <div class="callout">
+      <span class="lbl">A espinha psicológica</span>
+      <p style="margin:6px 0 0">Atenção → Identificação → <strong>Alívio da culpa</strong> → Esperança → Ação. No nicho de constelação, o <strong>alívio da culpa</strong> (camada 3) é o que mais converte: o público vive achando que o problema é ele. “Não é você, é um padrão herdado — e dá pra resolver” tira o peso e abre a saída ao mesmo tempo.</p>
+    </div>
+    <a class="toplink" href="#top">↑ voltar ao topo</a>
+  </section>
+
+  <!-- 02 -->
+  <section class="card" id="s2">
+    <div class="eyebrow">Repertório</div>
+    <h2>02 · Biblioteca de estruturas</h2>
+    <p class="muted">12 formas de organizar as 5 camadas. Escolha pela dor que quer atacar. 🎣 gancho · 🔁 corpo · 📣 CTA.</p>
+
+    <div class="struct"><div class="head"><span class="badge">01</span><span class="name">PAS — Problema · Agitação · Solução</span></div>
+      <div class="flow">🎣 nomeia o problema · 🔁 agita e revela a causa sistêmica · 📣 saída + CTA</div>
+      <div class="quote">“Você atrai sempre o mesmo tipo de relacionamento que te machuca. Já tentou terapia, livro, jurou que seria diferente — e repetiu. Não é falta de sorte: é uma lealdade familiar herdada. A constelação mostra isso em uma sessão. Comenta ‘AMOR’.”</div></div>
+
+    <div class="struct"><div class="head"><span class="badge">02</span><span class="name">Antes / Depois (Transformação)</span></div>
+      <div class="flow">🎣 contraste de estados · 🔁 ponto de virada · 📣 “você também pode”</div>
+      <div class="quote">“Há 6 meses eu não conseguia receber dinheiro sem culpa. Hoje cobro meu valor sem tremer. O que mudou? Eu olhei pra história financeira da minha família…”</div></div>
+
+    <div class="struct"><div class="head"><span class="badge">03</span><span class="name">Cético → Convertido</span></div>
+      <div class="flow">🎣 “eu achava bobagem, até…” · 🔁 o que mudou · 📣 “se você é desconfiado igual eu era…”</div>
+      <div class="quote">“Sou engenheiro, cético, achava constelação uma viagem. Fui numa sessão só pra agradar minha esposa. Saí entendendo por que eu repetia a mesma briga do meu pai com cada chefe que tive.”</div>
+      <p class="muted" style="font-size:13px">Ótima pra escalar fora da bolha esotérica e atingir público racional.</p></div>
+
+    <div class="struct"><div class="head"><span class="badge">04</span><span class="name">Segredo / Descoberta revelada</span></div>
+      <div class="flow">🎣 “ninguém te conta que…” · 🔁 revela como insider · 📣 “quer ver o seu?”</div>
+      <div class="quote">“Nenhum terapeuta tradicional te conta: muitos dos seus bloqueios não começaram em você. Começaram em alguém que você talvez nem conheceu — e seu corpo paga a conta.”</div></div>
+
+    <div class="struct"><div class="head"><span class="badge">05</span><span class="name">Confissão / Vulnerabilidade</span></div>
+      <div class="flow">🎣 confissão íntima · 🔁 dor → descoberta · 📣 CTA acolhedor</div>
+      <div class="quote">“Por anos senti raiva da minha mãe e me odiei por isso. A constelação me mostrou que aquela raiva nem era minha — vinha da relação dela com a mãe dela.”</div></div>
+
+    <div class="struct"><div class="head"><span class="badge">06</span><span class="name">Os Sinais / Lista de erros</span></div>
+      <div class="flow">🎣 “3 sinais de que…” · 🔁 itens com micro-identificação · 📣 “marcou 2+? então…”</div>
+      <div class="quote">“1) Culpa de ser feliz quando alguém da família não é. 2) Você se sabota perto de algo grande. 3) Saudade de algo que nunca viveu. Padrões sistêmicos clássicos.”</div>
+      <p class="muted" style="font-size:13px">Formato campeão de Reels: fácil de gravar, alta retenção, muito comentário.</p></div>
+
+    <div class="struct"><div class="head"><span class="badge">07</span><span class="name">Dia na vida / Bastidor</span></div>
+      <div class="flow">🎣 “vem comigo numa sessão” · 🔁 mostra o processo · 📣 CTA natural</div>
+      <p class="muted" style="font-size:13.5px; margin:6px 0 0">Humaniza, constrói marca e prova social. Ótimo pra topo de funil.</p></div>
+
+    <div class="struct"><div class="head"><span class="badge">08</span><span class="name">Diagnóstico — “Se você sente X, é porque Y”</span></div>
+      <div class="flow">🎣 sintoma específico · 🔁 “isso costuma significar…” · 📣 “quer descobrir a sua origem?”</div>
+      <div class="quote">“Se você sente que precisa estar sempre resolvendo a vida de todo mundo da família, é provável que tenha assumido, ainda criança, um lugar que não era seu no sistema. Isso tem nome e solução.”</div></div>
+
+    <div class="struct"><div class="head"><span class="badge">09</span><span class="name">Pergunta-isca (engajamento)</span></div>
+      <div class="flow">🎣 pergunta que separa o público · 🔁 mini-explicação · 📣 “comenta [palavra]”</div>
+      <div class="quote">“Qual desses você mais sente: bloqueio no amor, no dinheiro ou na saúde? Comenta. Os três quase sempre têm a mesma raiz — e não é onde você imagina.”</div></div>
+
+    <div class="struct"><div class="head"><span class="badge">10</span><span class="name">Autoridade emprestada / História do método</span></div>
+      <div class="flow">🎣 “existe um método criado por…” · 🔁 a descoberta · 📣 “quer conhecer?”</div>
+      <p class="muted" style="font-size:13.5px; margin:6px 0 0">Educa público frio e dá lastro histórico (ex.: Bert Hellinger), reduzindo a objeção de “misticismo”.</p></div>
+
+    <div class="struct"><div class="head"><span class="badge">11</span><span class="name">Mito vs. Verdade</span></div>
+      <div class="flow">🎣 “mito: …” · 🔁 “verdade: …” · 📣 CTA</div>
+      <div class="quote">“Mito: ‘é o meu jeito, nasci assim’. Verdade: comportamentos repetidos por gerações não são personalidade — são lealdade invisível. E lealdade a gente reorganiza.”</div></div>
+
+    <div class="struct"><div class="head"><span class="badge">12</span><span class="name">Carta / Mensagem direta</span></div>
+      <div class="flow">🎣 “esse vídeo é pra você que…” · 🔁 valida + vira · 📣 CTA pessoal</div>
+      <div class="quote">“Esse vídeo é pra você que é a primeira da família a tentar quebrar o ciclo. Que foi pra terapia, leu os livros, fez diferente — e ainda sente um peso antigo. Você não está louca. Está sentindo o sistema.”</div></div>
+
+    <div class="callout"><span class="lbl">Como escalar</span>
+      <p style="margin:6px 0 0">Teste 1 estrutura por criativo. Achou a vencedora? Faça 5-10 variações <strong>só do gancho</strong>, mantendo o corpo. As melhores estruturas encaixam uma na outra (ex.: gancho de Confissão + corpo de Diagnóstico + CTA de Pergunta-isca).</p></div>
+    <a class="toplink" href="#top">↑ voltar ao topo</a>
+  </section>
+
+  <!-- 03 -->
+  <section class="card" id="s3">
+    <div class="eyebrow">O recheio certo</div>
+    <h2>03 · Adaptação ao nicho</h2>
+
+    <h3>Os 6 gatilhos centrais</h3>
+    <p class="muted">Use na <strong>Camada 3 (Virada)</strong> — é o que mais converte.</p>
+    <ol>
+      <li><strong>Alívio da culpa</strong> — “o problema não é você, é um padrão herdado”. <em>(O nº1.)</em></li>
+      <li><strong>Lealdade invisível</strong> — “você repete porque, sem saber, é leal a alguém do sistema”.</li>
+      <li><strong>Pertencimento</strong> — “todo mundo no sistema precisa ter um lugar”.</li>
+      <li><strong>Carga herdada</strong> — “você carrega um peso que começou antes de você”.</li>
+      <li><strong>Quebra de ciclo geracional</strong> — “você pode ser quem interrompe o padrão”.</li>
+      <li><strong>Ordem e reconciliação</strong> — “quando cada um ocupa seu lugar, o amor flui”.</li>
+    </ol>
+
+    <h3>Vocabulário: use vs. evite</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Use (linguagem do público)</th><th>Evite (jargão / risco)</th></tr>
+      <tr><td class="yes">padrão que se repete</td><td class="no">“transtorno”, “doença”</td></tr>
+      <tr><td class="yes">lealdade invisível</td><td class="no">“cura garantida”</td></tr>
+      <tr><td class="yes">carga / peso que não é seu</td><td class="no">“tratamento” (soa clínico)</td></tr>
+      <tr><td class="yes">emaranhamento sistêmico</td><td class="no">“ganhe R$ X” (promessa exata)</td></tr>
+      <tr><td class="yes">quebrar o ciclo</td><td class="no">“milagre”, “mágica”</td></tr>
+      <tr><td class="yes">ocupar seu lugar no sistema</td><td class="no">diagnósticos médicos</td></tr>
+      <tr><td class="yes">destravar / dar leveza</td><td class="no">“substitui terapia/remédio”</td></tr>
+    </table></div>
+
+    <h3>Mapa: dor → estrutura</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Dor do público</th><th>Estrutura</th><th>Gatilho</th></tr>
+      <tr><td>Repete relacionamentos ruins</td><td>PAS (1) / Diagnóstico (8)</td><td>Lealdade invisível</td></tr>
+      <tr><td>Bloqueio com dinheiro</td><td>Antes/Depois (2)</td><td>Carga herdada</td></tr>
+      <tr><td>Acha que é “viagem”</td><td>Cético→Convertido (3)</td><td>Alívio da culpa</td></tr>
+      <tr><td>Raiva/mágoa de um parente</td><td>Confissão (5)</td><td>Reconciliação</td></tr>
+      <tr><td>Se sente a “ovelha negra”</td><td>Carta direta (12)</td><td>Pertencimento</td></tr>
+      <tr><td>Curiosa, ainda fria</td><td>Segredo (4) / Autoridade (10)</td><td>Quebra de ciclo</td></tr>
+      <tr><td>Quente / quer interagir</td><td>Pergunta-isca (9) / Sinais (6)</td><td>Quebra de ciclo</td></tr>
+    </table></div>
+
+    <div class="callout">
+      <span class="lbl">⚠️ Conformidade no Meta — leia antes de gravar</span>
+      <ol style="margin:8px 0 0">
+        <li><strong>Não prometa cura/resultado de saúde.</strong> Fale em leveza, clareza, compreensão — não “curar ansiedade/depressão”.</li>
+        <li><strong>Não afirme atributos pessoais.</strong> Em vez de “você que tem depressão e pai ausente…”, use “se você sente que carrega um peso antigo…” (hipótese).</li>
+        <li><strong>Sem promessa financeira específica.</strong> “Destravar a relação com a prosperidade” passa; “ganhe R$ 10 mil” não.</li>
+        <li><strong>Não posicione como substituto</strong> de tratamento médico/psicológico.</li>
+        <li><strong>Depoimentos:</strong> com autorização por escrito e sem garantia de resultado. Sentimento &gt; resultado material.</li>
+      </ol>
+      <p style="margin:8px 0 0"><strong>Regra prática:</strong> se a frase <em>promete</em> algo definitivo sobre saúde/dinheiro ou afirma saber um atributo pessoal, reescreva como possibilidade/sentimento.</p>
+    </div>
+
+    <h3>Tom &amp; estética UGC</h3>
+    <p><span class="pill">Tom: amiga que descobriu algo</span><span class="pill">Cenário caseiro</span><span class="pill">Ritmo pausado</span><span class="pill">Olho no olho na virada</span><span class="pill">Trilha suave/baixa</span><span class="pill">Sempre com legenda</span></p>
+    <a class="toplink" href="#top">↑ voltar ao topo</a>
+  </section>
+
+  <!-- 04 -->
+  <section class="card" id="s4">
+    <div class="eyebrow">Mão na massa</div>
+    <h2>04 · Templates &amp; bancos</h2>
+    <p class="muted">Cada <code>[colchete]</code> é um espaço pra trocar pelo seu recheio. Tempos pra Reels de ~45s.</p>
+
+    <h3>Template A — PAS</h3>
+    <pre><code>[0-3s GANCHO]
+"Eu [verbo] [problema] e achava que era [crença errada]."
+
+[3-12s AGITAÇÃO]
+"Já tinha tentado [1], [2], até [3]. Nada segurava."
+
+[12-28s VIRADA]
+"Aí entendi: não era [crença errada]. Era [causa sistêmica].
+[mecanismo em 1 frase]."
+
+[28-40s PROVA]
+"Quando eu [ação], [resultado em sentimento]. Pela 1ª vez
+em [tempo], senti [estado novo]."
+
+[40-48s CTA]
+"Se você também [sintoma], comenta '[PALAVRA]'."</code></pre>
+
+    <h3>Template B — Diagnóstico</h3>
+    <pre><code>[0-3s] "Se você [sintoma específico], esse vídeo é pra você."
+[3-10s] "Você [2-3 variações do padrão] e se pergunta por
+         que só acontece com você."
+[10-25s] "O que quase ninguém conta é que isso tem raiz em
+          [causa sistêmica]. Não é [crença] — é [reposição]."
+[25-38s] "A constelação revela esse padrão de um jeito que
+          você vê com os próprios olhos. [como funciona]."
+[38-45s] "Quer descobrir o seu? Comenta '[PALAVRA]'."</code></pre>
+
+    <h3>Template C — Cético → Convertido</h3>
+    <pre><code>[0-3s] "Sou [identidade cética] e achava constelação [objeção]."
+[3-15s] "Fui numa sessão só por [motivo neutro]."
+[15-30s] "E aí [momento que mudou tudo]. Entendi por que eu
+          [padrão] — fazia sentido demais."
+[30-40s] "[Resultado/sentimento]. Eu, que não acreditava."
+[40-48s] "Se você é desconfiado igual eu era, [CTA]."</code></pre>
+
+    <h3>Template D — Os Sinais (lista)</h3>
+    <pre><code>[0-3s] "[N] sinais de que você carrega um padrão que nem é seu:"
+[3-30s] "Um: [sinal]. Dois: [sinal]. Três: [sinal]."
+        (olhe pra câmera, com pausa em cada)
+[30-40s] "Marcou dois ou mais? Não é coincidência. É [causa]."
+[40-48s] "Comenta quantos você marcou."</code></pre>
+
+    <h3>🎣 Banco de ganchos (0-3s)</h3>
+    <ol>
+      <li>“O motivo de você [problema] talvez não seja seu. Seja de [parente].”</li>
+      <li>“Se você repete o mesmo erro da sua [mãe/pai] mesmo jurando que não, presta atenção.”</li>
+      <li>“Ninguém te conta que [bloqueio] pode ter começado antes de você nascer.”</li>
+      <li>“Eu achava que constelação familiar era bobagem. Até [evento].”</li>
+      <li>“Vou confessar algo que tive vergonha por anos: [confissão].”</li>
+      <li>“[Número] sinais de que você carrega um peso que não é seu.”</li>
+      <li>“Esse vídeo é pra você que é a primeira da família a quebrar o ciclo.”</li>
+      <li>“Você sustenta todo mundo e ninguém te sustenta? Tem nome pra isso.”</li>
+      <li>“Por que você se sabota toda vez que está prestes a vencer?”</li>
+      <li>“Mito: ‘nasci assim’. Verdade: [reposicionamento].”</li>
+    </ol>
+
+    <h3>🔁 Transições pra virada (Camada 3)</h3>
+    <ul>
+      <li>“Aí eu descobri uma coisa que mudou tudo…”</li>
+      <li>“O que quase ninguém te conta é que…”</li>
+      <li>“A verdade é que o problema nunca foi você…”</li>
+      <li>“Foi quando olhei pra história da minha família que entendi…”</li>
+      <li>“Existe uma explicação pra isso — e ela alivia muito…”</li>
+    </ul>
+
+    <h3>📣 Banco de CTAs</h3>
+    <p><strong>Engajamento:</strong> “Comenta ‘[PALAVRA]’ que eu te mando o 1º passo.” · “Qual desses é o seu? Escreve aqui.”<br>
+    <strong>Tráfego:</strong> “Clica no link e faça o teste do seu padrão.” · “Manda ‘MAPA’ no direct.”<br>
+    <strong>Continuidade:</strong> “Me segue que todo dia eu trago um padrão sistêmico aqui.”</p>
+
+    <div class="callout"><span class="lbl">Teste no Meta</span>
+      <p style="margin:6px 0 0">Mantenha o corpo e rode 5 variações <strong>só do gancho</strong>. Vencido o gancho, teste 2-3 CTAs. Mude <strong>uma variável por vez</strong>.</p></div>
+
+    <h3>✅ Checklist antes de publicar</h3>
+    <ul class="checklist">
+      <li>O gancho prende em 3s sem depender de som?</li>
+      <li>A identificação descreve um <strong>sintoma específico</strong>?</li>
+      <li>Tem uma <strong>virada</strong> que alivia a culpa e reposiciona o problema?</li>
+      <li>A prova é por sentimento/percepção (segura)?</li>
+      <li>CTA é <strong>único</strong> e de baixo atrito?</li>
+      <li>Passou na conformidade (sem cura/dinheiro/atributo pessoal)?</li>
+      <li>Tem legenda com palavras-gatilho destacadas?</li>
+      <li>Parece UGC real (caseiro, íntimo) e não comercial?</li>
+    </ul>
+    <a class="toplink" href="#top">↑ voltar ao topo</a>
+  </section>
+
+  <!-- 05 -->
+  <section class="card" id="s5">
+    <div class="eyebrow">Abastecimento</div>
+    <h2>05 · Método de mapeamento</h2>
+    <p>Como pegar qualquer criativo UGC e extrair a estrutura invisível pra adaptar.</p>
+
+    <h3>Passo 1 · Onde encontrar</h3>
+    <ul>
+      <li><strong>Biblioteca de Anúncios do Meta</strong> (facebook.com/ads/library) — busque concorrentes e palavras do nicho. Priorize anúncios <strong>rodando há semanas</strong> (tempo no ar = sinal de que converte).</li>
+      <li><strong>Reels do nicho</strong> que fizeram <em>você</em> parar de rolar.</li>
+      <li><strong>Outros nichos com a mesma emoção</strong> (emagrecimento, finanças, relacionamento) — a estrutura migra, o recheio você troca.</li>
+    </ul>
+
+    <h3>Passo 2 · A grade de decupagem</h3>
+    <pre><code>CRIATIVO: ______  Tempo no ar: ___  Nicho: ___
+
+[0-3s]  GANCHO    tipo: ___  frase: "___"
+                  por que parou o scroll? ___
+[__]    IDENTIF.  sintoma específico: ___
+[__]    VIRADA    crença derrubada: ___
+                  nova causa/mecanismo: ___
+[__]    PROVA     tipo: ___
+[__]    CTA       comando único: ___  atrito: ___
+
+ESTRUTURA (ver 02): nº ___</code></pre>
+
+    <h3>Passo 3 · A pergunta-chave</h3>
+    <p>Em cada bloco pergunte <strong>“qual a FUNÇÃO?”</strong> — não “o que ele disse”. A função é transferível entre nichos; as palavras não. É por isso que “a culpa não é sua, é do seu metabolismo” (emagrecimento) vira “a culpa não é sua, é de um padrão herdado” (constelação) <strong>mantendo a mesma estrutura</strong>.</p>
+
+    <h3>Passo 4 · Transplante</h3>
+    <pre><code>1. Identifique a ESTRUTURA (uma das 12).
+2. Pegue a FUNÇÃO de cada bloco.
+3. Troque o recheio:
+   sintoma  → sintoma de constelação (ver 03)
+   causa    → causa sistêmica
+   prova    → prova por sentimento
+   CTA      → seu CTA + palavra de comentário
+4. Passe pela conformidade (03).
+5. Grave em estética UGC.</code></pre>
+
+    <div class="quote bad"><span class="lbl">Erro comum</span>Copiar o <strong>roteiro</strong> (mesmas palavras, trocando o produto). Soa falso — e te transforma em “mais um igual”.</div>
+    <div class="quote good"><span class="lbl">Certo</span>Copiar a <strong>estrutura</strong> e reescrever 100% do recheio com a sua voz. Original na superfície, validado na base.</div>
+    <a class="toplink" href="#top">↑ voltar ao topo</a>
+  </section>
+
+  <footer>
+    <p>Framework UGC → Constelação Familiar · uso interno<br>
+    A estrutura é emprestada. A mensagem é sua. É essa combinação que escala.</p>
+  </footer>
+
+</div>
+<span id="top"></span>
+</body>
+</html>
