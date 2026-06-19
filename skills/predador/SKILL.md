@@ -82,8 +82,10 @@ trabalhando na espionagem enquanto transcreve:
 "$APP_RES/convert.sh" "$MP4" > "$DEST/_transcricao.log" 2>&1
 ```
 
-Rode esse comando com **run_in_background = true**. O `convert.sh` gera `mp3`, `.txt` e `.srt`
-(por padrão numa subpasta `<stem>/` ao lado do mp4). Você vai recolhê-los no Passo 4.
+Rode esse comando com **run_in_background = true**. Comportamento exato do `convert.sh` (confirmado):
+cria uma subpasta `<stem>/` ao lado do mp4 e coloca lá `<stem>.mp3`, `<stem>.txt`, `<stem>.srt`,
+**MOVE o `<stem>.mp4` pra dentro dela também**, e gera um extra `<stem> - INFO.txt` (métricas:
+duração, palavras, ritmo de fala). Idioma fixo `pt`, VAD ativo. Você recolhe tudo no Passo 4.
 
 ### Passo 3 — Espionagem do funil (em paralelo com a transcrição)
 
@@ -92,19 +94,30 @@ Quando ela entregar o relatório HTML, **salve em `"$DEST/espionagem.html"`** (s
 em arquivo, mova/renomeie para esse caminho). Extraia e anote os achados-chave (stack: player/
 checkout, Offer IDs, preços; testes A/B; ângulo; reputação) — você vai usá-los no resumo do índice.
 
-### Passo 4 — Esperar a transcrição e organizar a pasta
+### Passo 4 — Esperar a transcrição e achatar a pasta
 
-Garanta que o job em background do Passo 2 terminou (o arquivo `.txt` precisa existir). Depois,
-**suba** mp3/txt/srt para a raiz do dossiê e limpe a subpasta:
+Garanta que o job em background do Passo 2 terminou (o `.txt` precisa existir **dentro da subpasta**
+`<stem>/`). O `convert.sh` coloca tudo nessa subpasta (incluindo o mp4, que ele MOVE pra lá, e um
+`<stem> - INFO.txt`). Suba os entregáveis pra raiz do dossiê e identifique cada um:
 
 ```bash
-find "$DEST" -mindepth 2 -type f \( -name '*.mp3' -o -name '*.txt' -o -name '*.srt' \) -exec mv -f {} "$DEST"/ \;
+# sobe mp4/mp3/txt/srt (e o INFO) da subpasta pra raiz do dossiê, depois apaga a subpasta vazia
+find "$DEST" -mindepth 2 -type f \
+  \( -name '*.mp4' -o -name '*.mp3' -o -name '*.txt' -o -name '*.srt' \) \
+  -exec mv -f {} "$DEST"/ \;
 find "$DEST" -mindepth 1 -type d -empty -delete
-TXT="$(find "$DEST" -maxdepth 1 -name '*.txt' -type f | head -1)"
-echo "TXT=$TXT"
+
+# a TRANSCRIÇÃO é o .txt que NÃO termina em "INFO.txt" (esse outro é só métricas)
+TXT="$(find "$DEST" -maxdepth 1 -type f -name '*.txt' ! -iname '*info.txt' | head -1)"
+MP4="$(find "$DEST" -maxdepth 1 -type f -name '*.mp4' | head -1)"
+MP3="$(find "$DEST" -maxdepth 1 -type f -name '*.mp3' | head -1)"
+SRT="$(find "$DEST" -maxdepth 1 -type f -name '*.srt' | head -1)"
+INFO="$(find "$DEST" -maxdepth 1 -type f -iname '*info.txt' | head -1)"
+echo "TXT=$TXT"; echo "MP4=$MP4"; echo "MP3=$MP3"; echo "SRT=$SRT"; echo "INFO=$INFO"
 ```
 
-Renomeie, se quiser, para nomes limpos: `vsl.mp4`, `vsl.mp3`, `transcricao.txt`, `transcricao.srt`.
+⚠️ **Nunca** passe o `"<stem> - INFO.txt"` para a `filemon-dissector` — a transcrição é o `$TXT` acima.
+O `$INFO` traz duração/ritmo de fala prontos: use-os no resumo executivo do índice.
 
 ### Passo 5 — Dissecar a arquitetura (filemon-dissector)
 
@@ -116,9 +129,11 @@ mecanismo, oferta) para o índice.
 ### Passo 6 — Gerar o índice `dossie.html`
 
 Crie `"$DEST/dossie.html"` — um índice **self-contained**, estética **preto-e-branco "ScalenX"**
-(coerente com as outras skills). Use o esqueleto abaixo, preenchendo os `{{...}}` e linkando os
-arquivos por caminho **relativo** (eles estão na mesma pasta). Inclua um **resumo executivo** com
-o que a espionagem e a dissecação revelaram (stack, preço, ângulo, mecanismo, oferta, A/B).
+(coerente com as outras skills). Use o esqueleto abaixo, preenchendo os `{{...}}`. Como `dossie.html`
+fica na **mesma pasta** que os arquivos, cada link é só o **basename** (ex.: `{{MP4}}` →
+`basename "$MP4"`, `{{TXT}}` → `basename "$TXT"`, `{{DISSEC}}` → nome do arquivo da dissecação).
+Preencha o **resumo executivo** com o que a espionagem e a dissecação revelaram (stack, preço,
+ângulo, mecanismo, oferta, A/B) — e puxe duração/ritmo de fala do `$INFO` (Passo 4).
 
 ```html
 <!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
@@ -182,6 +197,8 @@ transcrição.
 - **Sempre** entre aspas em `$DEST`, `$MP4`, `$APP_RES`, `$SWIPE_BASE` (têm espaços/acentos).
 - Download falhou → não derrube o dossiê: faça a espionagem mesmo assim e marque ⚠️ no índice.
 - Nunca sobrescreva um dossiê anterior: a pasta leva data + host no nome.
+- Transcrição ≠ métricas: o `convert.sh` gera DOIS `.txt` (`<stem>.txt` = transcrição e
+  `<stem> - INFO.txt` = métricas). Para a dissecação, use SEMPRE o que **não** termina em `INFO.txt`.
 - Se `espionagem-nobrega` ou `filemon-dissector` devolverem texto em vez de arquivo, **você** salva
   o conteúdo na pasta com a extensão certa.
 - Tudo — mp4, mp3, txt, srt, espionagem.html, dissecacao, dossie.html — fica **dentro de `$DEST`**.
